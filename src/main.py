@@ -1,13 +1,31 @@
 import json
 import os
-import requests
+from pycircleci.api import Api
+
+CIRCLE_API = 'https://circleci.com/api/v2/project/github/greenpeace/planet4-base/pipeline'
+USERNAME = 'greenpeace'
+PROJECT = 'planet4-base'
+BRANCH = 'main'
+
 
 def main(request):
     request_json = request.get_json()
 
-    if request.args and 'message' in request.args:
-        return request.args.get('message')
-    elif request_json and 'message' in request_json:
-        return request_json['message']
-    else:
-        return f'Hello World!'
+    try:
+        version = 'v{0}'.format(request_json['version']['name'])
+    except KeyError:
+        raise Exception('Version number was not provided')
+
+    circleci = Api(os.getenv('CIRCLE_TOKEN'))
+
+    parameters = {
+        "version": version,
+        "promote": True
+    }
+
+    response = circleci.trigger_pipeline(username=USERNAME,
+                                         project=PROJECT,
+                                         branch=BRANCH,
+                                         params=parameters)
+
+    return json.dumps(response)
