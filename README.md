@@ -1,4 +1,4 @@
-# Greenpeace Planet 4
+# Greenpeace Planet 4 Cloud function to trigger a new release deployment
 
 ![Planet4](./planet4.png)
 

@@ -1,0 +1,33 @@
+---
+version: 2.1
+
+docker_auth: &docker_auth
+  username: $DOCKERHUB_USERNAME
+  password: $DOCKERHUB_PASSWORD
+
+defaults: &defaults
+  docker:
+    - image: greenpeaceinternational/circleci-base:latest
+      auth:
+        <<: *docker_auth
+  environment:
+    GOOGLE_PROJECT_ID: planet-4-151612
+
+orbs:
+  slack: circleci/slack@3.4.2
+
+jobs:
+  lint:
+    <<: *defaults
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - checkout
+      - run:
+          command: find . -type f -name '*.yml' | xargs yamllint
+
+
+workflows:
+  branch:
+    jobs:
+      - lint
