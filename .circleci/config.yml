@@ -12,6 +12,8 @@ defaults: &defaults
         <<: *docker_auth
   environment:
     GOOGLE_PROJECT_ID: planet-4-151612
+    FUNCTION_NAME: p4-release
+    ENTRYPOINT: main
 
 orbs:
   slack: circleci/slack@3.4.2
@@ -30,8 +32,6 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run:
           name: prepare git
           command: |
@@ -51,10 +51,15 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run: activate-gcloud-account.sh
-
+      - run:
+          command: |
+            gcloud functions deploy ${FUNCTION_NAME} \
+              --entry-point ${ENTRYPOINT} \
+              --runtime python39 \
+              --trigger-http \
+              --source ./src/ \
+              --project $GOOGLE_PROJECT_ID
 
 workflows:
   branch:
@@ -67,13 +72,15 @@ workflows:
           filters:
             branches:
               only: main
-      - tag:
+      - deploy:
           context: org-global
           requires:
             - hold-promote
           filters:
             branches:
               only: main
+      - deploy:
+          context: org-global
 
   tag:
     jobs:
