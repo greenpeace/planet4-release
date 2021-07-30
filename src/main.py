@@ -13,7 +13,7 @@ def main(request):
 
     try:
         version = 'v{0}'.format(request_json['version']['name'])
-    except KeyError:
+    except (KeyError, TypeError):
         raise Exception('Version number was not provided')
 
     circleci = Api(os.getenv('CIRCLE_TOKEN'))
