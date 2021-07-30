@@ -12,11 +12,9 @@ defaults: &defaults
         <<: *docker_auth
   environment:
     GOOGLE_PROJECT_ID: planet-4-151612
+    REGION: europe-west1
     FUNCTION_NAME: p4-release
     ENTRYPOINT: main
-
-orbs:
-  slack: circleci/slack@3.4.2
 
 jobs:
   lint:
@@ -59,7 +57,8 @@ jobs:
               --runtime python39 \
               --trigger-http \
               --source ./src/ \
-              --project $GOOGLE_PROJECT_ID \
+              --project ${GOOGLE_PROJECT_ID} \
+              --region ${REGION} \
               --set-env-vars CIRCLE_TOKEN=${CIRCLE_TOKEN}
 
 workflows:
