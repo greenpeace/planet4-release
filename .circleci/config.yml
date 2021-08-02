@@ -10,6 +10,8 @@ defaults: &defaults
     - image: greenpeaceinternational/circleci-base:latest
       auth:
         <<: *docker_auth
+  environment:
+    GOOGLE_PROJECT_ID: planet-4-151612
 
 jobs:
   lint:
