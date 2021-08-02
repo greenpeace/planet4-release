@@ -10,11 +10,6 @@ defaults: &defaults
     - image: greenpeaceinternational/circleci-base:latest
       auth:
         <<: *docker_auth
-  environment:
-    GOOGLE_PROJECT_ID: planet-4-151612
-    REGION: europe-west1
-    FUNCTION_NAME: p4-release
-    ENTRYPOINT: main
 
 jobs:
   lint:
@@ -24,7 +19,8 @@ jobs:
           docker_layer_caching: true
       - checkout
       - run:
-          command: find . -type f -name '*.yml' | xargs yamllint
+          name: lint
+          command: make lint
 
   tag:
     <<: *defaults
@@ -49,17 +45,12 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - run: activate-gcloud-account.sh
       - run:
-          command: |
-            gcloud functions deploy ${FUNCTION_NAME} \
-              --entry-point ${ENTRYPOINT} \
-              --runtime python39 \
-              --trigger-http \
-              --source ./src/ \
-              --project ${GOOGLE_PROJECT_ID} \
-              --region ${REGION} \
-              --set-env-vars CIRCLE_TOKEN=${CIRCLE_TOKEN}
+          name: gcloud authenticate
+          command: activate-gcloud-account.sh
+      - run:
+          name: deploy
+          command: make deploy
 
 workflows:
   branch:

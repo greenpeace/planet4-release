@@ -1,0 +1,10 @@
+# =============================================================================
+
+# GCP project details
+GOOGLE_PROJECT_ID=planet-4-151612
+REGION=europe-west1
+
+# Function details
+FUNCTION_NAME=p4-release
+ENTRYPOINT=main
+PYTHON_VERSION=python39
