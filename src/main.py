@@ -2,7 +2,6 @@ import json
 import os
 from pycircleci.api import Api
 
-CIRCLE_API = 'https://circleci.com/api/v2/project/github/greenpeace/planet4-base/pipeline'
 USERNAME = 'greenpeace'
 PROJECT = 'planet4-base'
 BRANCH = 'main'
