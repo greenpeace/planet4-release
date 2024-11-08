@@ -17,8 +17,6 @@ jobs:
   lint:
     <<: *defaults
     steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
       - checkout
       - run:
           name: lint
@@ -57,7 +55,8 @@ jobs:
 workflows:
   branch:
     jobs:
-      - lint
+      - lint:
+          context: org-global
       - hold-promote:
           type: approval
           requires:
