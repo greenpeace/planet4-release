@@ -41,6 +41,7 @@ def release(version):
 
 def main(request):
     request_json = request.get_json()
+    version = False
 
     try:
         version = 'v{0}'.format(request_json['version']['name'])
