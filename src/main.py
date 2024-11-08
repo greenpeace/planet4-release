@@ -1,26 +1,62 @@
 import json
 import os
+import sys
 from pycircleci.api import Api
 
+JIRA_BASE_URL = 'https://jira.greenpeace.org/browse/'
 USERNAME = 'greenpeace'
 PROJECT = 'planet4-base'
 BRANCH = 'main'
 
 
-def main(request):
-    request_json = request.get_json()
-
+def ticket(ticket, fields):
     try:
-        version = 'v{0}'.format(request_json['version']['name'])
+        status = fields['status']['name']
     except (KeyError, TypeError):
-        raise Exception('Version number was not provided')
+        raise Exception('Not a valid ticket status')
 
-    circleci = Api(os.getenv('CIRCLE_TOKEN'))
+    if status != 'CLOSED':
+        sys.exit(0)
 
+    labels = fields['labels']
+    if 'FLAG' not in labels:
+        sys.exit(0)
+
+    parameters = {
+        "ticket": ticket,
+        "flag-ticket": True
+    }
+
+    return parameters
+
+
+def release(version):
     parameters = {
         "version": version,
         "promote": True
     }
+
+    return parameters
+
+
+def main(request):
+    request_json = request.get_json()
+    version = False
+
+    try:
+        version = 'v{0}'.format(request_json['version']['name'])
+        parameters = release(version)
+    except (KeyError, TypeError):
+        pass
+
+    if not version:
+        try:
+            fields = request_json['issue']['fields']
+            parameters = ticket(request_json['issue']['key'], fields)
+        except (KeyError, TypeError):
+            raise Exception('Not a valid version number or ticket provided')
+
+    circleci = Api(os.getenv('CIRCLE_TOKEN'))
 
     response = circleci.trigger_pipeline(username=USERNAME,
                                          project=PROJECT,
