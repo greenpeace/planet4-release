@@ -46,6 +46,9 @@ def main(request):
         version = 'v{0}'.format(request_json['version']['name'])
         parameters = release(version)
     except (KeyError, TypeError):
+        pass
+
+    if not version:
         try:
             fields = request_json['issue']['fields']
             parameters = ticket(request_json['issue']['key'], fields)
