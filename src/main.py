@@ -3,7 +3,6 @@ import os
 import sys
 from pycircleci.api import Api
 
-JIRA_BASE_URL = 'https://jira.greenpeace.org/browse/'
 USERNAME = 'greenpeace'
 PROJECT = 'planet4-base'
 BRANCH = 'main'
