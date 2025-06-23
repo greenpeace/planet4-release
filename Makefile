@@ -49,5 +49,4 @@ endif
 		--source ./src/ \
 		--project $(GOOGLE_PROJECT_ID) \
 		--region $(REGION) \
-		--gen2 \
 		--set-env-vars CIRCLE_TOKEN=$(CIRCLE_TOKEN)
