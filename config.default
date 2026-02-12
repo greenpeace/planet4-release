@@ -7,4 +7,4 @@ REGION=europe-west1
 # Function details
 FUNCTION_NAME=p4-release
 ENTRYPOINT=main
-PYTHON_VERSION=python39
+PYTHON_VERSION=python310

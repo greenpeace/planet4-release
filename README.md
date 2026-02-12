@@ -8,7 +8,7 @@ The best place to start is from main [Planet 4 repo](https://github.com/greenpea
 
 ## Development
 
-Jusr run `make`, or if you prefer to run it step-by-step:
+Just run `make`, or if you prefer to run it step-by-step:
 
 ```
 make lint
