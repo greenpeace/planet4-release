@@ -14,7 +14,7 @@ def ticket(ticket, fields):
     except (KeyError, TypeError):
         raise Exception('Not a valid ticket status')
 
-    if status != 'CLOSED':
+    if status != 'Closed':
         sys.exit(0)
 
     labels = fields['labels']
